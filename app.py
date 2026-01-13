@@ -1047,6 +1047,11 @@ if st.session_state.calculation_done and hasattr(st.session_state, 'map_obj'):
     with tab3:
         st.markdown("### 💾 Export Route Data")
         
+        # Calculate route efficiency safely
+        route_efficiency = "N/A"
+        if st.session_state.sr_success and st.session_state.sr_dist and st.session_state.sr_dist > 0:
+            route_efficiency = f"{(st.session_state.haversine_dist / st.session_state.sr_dist * 100):.2f}"
+        
         export_data = pd.DataFrame({
             "Parameter": [
                 "Origin Port",
@@ -1070,7 +1075,7 @@ if st.session_state.calculation_done and hasattr(st.session_state, 'map_obj'):
                 st.session_state.haversine_dur,
                 st.session_state.sr_dist - st.session_state.haversine_dist if st.session_state.sr_success else "N/A",
                 st.session_state.sr_dur - st.session_state.haversine_dur if st.session_state.sr_success else "N/A",
-                f"{(st.session_state.haversine_dist / st.session_state.sr_dist * 100):.2f}" if st.session_state.sr_success else "N/A"
+                route_efficiency
             ]
         })
         
